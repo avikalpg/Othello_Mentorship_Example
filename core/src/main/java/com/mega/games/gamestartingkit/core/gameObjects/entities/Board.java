@@ -128,23 +128,27 @@ public class Board extends Box {
             int x = i, y = j;
             int score_inc = 0;
             System.out.println("\tDirection changed to " + direction[0] + ":" + direction[1]);
-            while (x < dimension-1 && x > 0 && y > 0 && y < dimension-1) {
-                x += direction[0];
-                y += direction[1];
-                System.out.println("\t" + x + ":" + y );
+            x += direction[0];
+            y += direction[1];
+            while (x < dimension && x >= 0 && y >= 0 && y < dimension) {
+                System.out.println("\t" + x + ":" + y + "\t\tstate:" + state[x][y] + "\tscore_inc:" + score_inc);
                 if (state[x][y] == 0) {
                     break;
-                } else if (state[x][y] == turn && score_inc > 0) {
-                    while (x != i || y != j) {
-                        x -= direction[0];
-                        y -= direction[1];
-                        state[x][y] = turn;
+                } else if (state[x][y] == turn) {
+                    if (score_inc > 0) {
+                        while (x != i || y != j) {
+                            x -= direction[0];
+                            y -= direction[1];
+                            state[x][y] = turn;
+                        }
+                        score += score_inc;
                     }
-                    score += score_inc;
                     break;
                 } else if (state[x][y] == -1 * turn) {
                     score_inc++;
                 }
+                x += direction[0];
+                y += direction[1];
             }
         }
 
