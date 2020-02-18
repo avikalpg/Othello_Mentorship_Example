@@ -12,7 +12,8 @@ public class Board extends Box {
 
     private int dimension;
     private float slot_size;
-    private Slot[][] slots;
+    private int[][] state;
+    private ArrayList<Coin> coins;
 
     public Board(int dimension, float size, Color color) {
         super(size, size, color);
@@ -22,14 +23,13 @@ public class Board extends Box {
         }
 
         this.dimension = dimension;
-
         this.slot_size = size/((float) dimension);
-        slots = new Slot[dimension][dimension];
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                slots[i][j] = new Slot(this.slot_size, Color.BLACK);
-            }
-        }
+
+        state = new int[dimension][dimension];
+        state[dimension/2 - 1][dimension/2 - 1] = -1;
+        state[dimension/2 - 1][dimension/2] = 1;
+        state[dimension/2][dimension/2 - 1] = 1;
+        state[dimension/2][dimension/2] = -1;
     }
 
     @Override
@@ -62,30 +62,41 @@ public class Board extends Box {
 
     @Override
     public void update(float dt) {
+        coins = this.getCoins();
     }
 
     @Override
     public void draw(Batch batch) {
         super.draw(batch);
+
+        Slot[][] slots = new Slot[dimension][dimension];
         for (int i = 0; i < this.dimension; i++) {
             for (int j = 0; j < this.dimension; j++) {
+                slots[i][j] = new Slot(this.slot_size, Color.BLACK);
                 slots[i][j].setPos(this.getPos().x + (i * this.slot_size), this.getPos().y + (j * this.slot_size));
                 slots[i][j].draw(batch);
             }
         }
+
+        for (Coin coin:coins){
+            coin.draw(batch);
+        }
     }
 
-    public ArrayList<Coin> getStartingCoins() {
+    private ArrayList<Coin> getCoins() {
         ArrayList<Coin> coins = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (state[i][j] == 0) {
+                    continue;
+                }
                 Coin new_coin =  new Coin((this.slot_size - 0.2f) / 2f, Color.BLACK);
-                if (i + j == 1) {
+                if (state[i][j] == 1) {
                     new_coin.setColor(Color.WHITE);
                 } // else let it remain black
 
-                new_coin.setPos(this.getPos().x + this.getSize().x/2f + (2*i - 1) * this.slot_size/2f,
-                        this.getPos().y + this.getSize().y/2f + (2*j - 1) * this.slot_size/2f);
+                new_coin.setPos(this.getPos().x + i * this.slot_size + this.slot_size/2f,
+                        this.getPos().y + j * this.slot_size + this.slot_size/2f);
 
                 coins.add(new_coin);
             }

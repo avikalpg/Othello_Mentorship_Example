@@ -23,7 +23,6 @@ public class GameObjectManager {
         board.setPos(GameData._virtualWidth/2f - board_size/2f, GameData._virtualHeight/2f - board_size/2f);
 
         objs.add(board);
-        objs.addAll(board.getStartingCoins());
     }
 
     public ArrayList<GameObject> getObjs() {
