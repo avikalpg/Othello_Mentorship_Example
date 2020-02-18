@@ -1,0 +1,33 @@
+texAtlas.png
+size: 1082, 278
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+circle_fill
+  rotate: false
+  xy: 11, 11
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+circle_line
+  rotate: false
+  xy: 279, 11
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+square_fill
+  rotate: false
+  xy: 547, 11
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+square_line
+  rotate: false
+  xy: 815, 11
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
