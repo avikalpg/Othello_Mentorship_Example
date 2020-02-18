@@ -13,6 +13,7 @@ public class Board extends Box {
     private int dimension;
     private float slot_size;
     private int[][] state;
+    private int turn;
     private ArrayList<Coin> coins;
 
     public Board(int dimension, float size, Color color) {
@@ -30,6 +31,12 @@ public class Board extends Box {
         state[dimension/2 - 1][dimension/2] = 1;
         state[dimension/2][dimension/2 - 1] = 1;
         state[dimension/2][dimension/2] = -1;
+
+        turn = -1;
+    }
+
+    public int getTurn() {
+        return turn;
     }
 
     @Override
@@ -48,6 +55,12 @@ public class Board extends Box {
         i = (int) (x / this.slot_size);
         j = (int) (y / this.slot_size);
         System.out.println(i + " " + j);
+
+        int score_inc = move(turn, i, j);
+
+        if (score_inc > 0) {
+            turn *= -1;
+        }
     }
 
     @Override
@@ -102,5 +115,39 @@ public class Board extends Box {
             }
         }
         return coins;
+    }
+
+    private int move(int turn, int i, int j) {
+        if (turn != 1 && turn != -1) {
+            throw new InvalidParameterException("turn should only be -1 (Black) or 1 (White)");
+        }
+
+        int[][] directions = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}};
+        int score = 0;
+        for (int[] direction:directions) {
+            int x = i, y = j;
+            int score_inc = 0;
+            System.out.println("\tDirection changed to " + direction[0] + ":" + direction[1]);
+            while (x < dimension-1 && x > 0 && y > 0 && y < dimension-1) {
+                x += direction[0];
+                y += direction[1];
+                System.out.println("\t" + x + ":" + y );
+                if (state[x][y] == 0) {
+                    break;
+                } else if (state[x][y] == turn && score_inc > 0) {
+                    while (x != i || y != j) {
+                        x -= direction[0];
+                        y -= direction[1];
+                        state[x][y] = turn;
+                    }
+                    score += score_inc;
+                    break;
+                } else if (state[x][y] == -1 * turn) {
+                    score_inc++;
+                }
+            }
+        }
+
+        return score;
     }
 }
