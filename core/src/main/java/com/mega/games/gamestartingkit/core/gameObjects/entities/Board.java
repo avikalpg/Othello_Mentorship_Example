@@ -35,6 +35,19 @@ public class Board extends Box {
     @Override
     public void onTouchDown(float x, float y) {
         super.onTouchDown(x, y);
+
+        int i, j;
+
+        x = x - this.getPos().x;
+        y = y - this.getPos().y;
+
+        if ((x < 0) || (x > this.getSize().x) || (y < 0) || (y > this.getSize().y)) {
+            return;
+        }
+
+        i = (int) (x / this.slot_size);
+        j = (int) (y / this.slot_size);
+        System.out.println(i + " " + j);
     }
 
     @Override
