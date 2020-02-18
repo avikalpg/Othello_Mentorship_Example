@@ -2,6 +2,7 @@ package com.mega.games.gamestartingkit.core.gameObjects.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Box;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Slot;
 
@@ -59,6 +60,14 @@ public class Board extends Box {
         int score_inc = move(turn, i, j);
 
         if (score_inc > 0) {
+            if (turn == 1) {
+                GameData.getInstance().white_score += score_inc + 1;
+                GameData.getInstance().black_score -= score_inc;
+            }
+            else if (turn == -1) {
+                GameData.getInstance().black_score += score_inc + 1;
+                GameData.getInstance().white_score -= score_inc;
+            }
             turn *= -1;
         }
     }
@@ -121,17 +130,21 @@ public class Board extends Box {
         if (turn != 1 && turn != -1) {
             throw new InvalidParameterException("turn should only be -1 (Black) or 1 (White)");
         }
+        else if (state[i][j] != 0) {
+            System.out.println("You can only place coins on empty spots");
+            return 0;
+        }
 
         int[][] directions = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}};
         int score = 0;
         for (int[] direction:directions) {
             int x = i, y = j;
             int score_inc = 0;
-            System.out.println("\tDirection changed to " + direction[0] + ":" + direction[1]);
+//            System.out.println("\tDirection changed to " + direction[0] + ":" + direction[1]);
             x += direction[0];
             y += direction[1];
             while (x < dimension && x >= 0 && y >= 0 && y < dimension) {
-                System.out.println("\t" + x + ":" + y + "\t\tstate:" + state[x][y] + "\tscore_inc:" + score_inc);
+//                System.out.println("\t" + x + ":" + y + "\t\tstate:" + state[x][y] + "\tscore_inc:" + score_inc);
                 if (state[x][y] == 0) {
                     break;
                 } else if (state[x][y] == turn) {

@@ -14,7 +14,8 @@ public class GameData {
     public float gameEndLag;
 
     public float elapsed;
-    public float score;
+    public float black_score;
+    public float white_score;
 
     //Game Specific Data (Mostly Config Driven)
     //Todo: Define Game Specific Data

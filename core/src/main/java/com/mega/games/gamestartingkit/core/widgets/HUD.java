@@ -7,23 +7,28 @@ import com.mega.games.gamestartingkit.core.dataLoaders.GameAssetManager;
 import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
 
 public class HUD{
-    private Label scoreLabel;
+    private Label blackScoreLabel;
+    private Label whiteScoreLabel;
 
     public HUD(){
-        scoreLabel = new Label("0", GameAssetManager.getInstance().scoreLabelStyle);
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
-        scoreLabel.setPosition(0,GameData._virtualHeight - 2*scoreLabel.getHeight());
+        blackScoreLabel = new Label("0", GameAssetManager.getInstance().scoreLabelStyle);
+        blackScoreLabel.setAlignment(Align.left);
+        blackScoreLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
+        blackScoreLabel.setPosition(0,GameData._virtualHeight - 2* blackScoreLabel.getHeight());
+
+        whiteScoreLabel = new Label("0", GameAssetManager.getInstance().scoreLabelStyle);
+        whiteScoreLabel.setAlignment(Align.right);
+        whiteScoreLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
+        whiteScoreLabel.setPosition(0,GameData._virtualHeight - 2* whiteScoreLabel.getHeight());
     }
 
     public void update(float dt) {
-        //increase score by 1 every second
-        GameData.getInstance().score += dt;
-
-        scoreLabel.setText(Long.toString((long)GameData.getInstance().score));
+        blackScoreLabel.setText(Long.toString((long)GameData.getInstance().black_score));
+        whiteScoreLabel.setText(Long.toString((long)GameData.getInstance().white_score));
     }
 
     public void draw(Batch batch) {
-        scoreLabel.draw(batch,1);
+        blackScoreLabel.draw(batch,1);
+        whiteScoreLabel.draw(batch,1);
     }
 }

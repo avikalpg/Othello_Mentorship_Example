@@ -142,7 +142,7 @@ public class PlayScreen implements Screen {
         Batch batch = GameInfra.getInstance().batch;
 
         batch.begin();
-//        hud.draw(batch);
+        hud.draw(batch);
         GameObjectManager.getInstance().draw(batch);
 
 //        if(GameData._debugMode) {

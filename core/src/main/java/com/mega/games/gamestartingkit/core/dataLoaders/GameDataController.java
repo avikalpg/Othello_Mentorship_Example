@@ -57,7 +57,8 @@ public class GameDataController{
 
     public void setDefault(){
         data.elapsed = 0;
-        data.score = 0;
+        data.black_score = 2;
+        data.white_score = 2;
 
         data.gameEndLag = 5;
 
@@ -100,7 +101,7 @@ public class GameDataController{
         if(!data.isGameOver) {
             data.isGameEnded = true;
             data.isGameOver = true;
-            megaServices.callbacks().gameOver((long)data.score);
+            megaServices.callbacks().gameOver((long)data.black_score - (long)data.white_score);
         }
     }
 
