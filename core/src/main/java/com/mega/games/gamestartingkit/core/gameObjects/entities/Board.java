@@ -68,7 +68,7 @@ public class Board extends Box {
                 GameData.getInstance().black_score += score_inc + 1;
                 GameData.getInstance().white_score -= score_inc;
             }
-            turn *= -1;
+            updateTurn();
         }
     }
 
@@ -166,5 +166,45 @@ public class Board extends Box {
         }
 
         return score;
+    }
+
+    private void updateTurn() {
+        if (checkGameEnd()) {
+            GameData.getInstance().isGameEnded = true;
+        }
+        else {
+            turn *= -1;
+            if (noMoreMoves(turn)) {
+                turn *= -1;
+            }
+        }
+    }
+
+    private Boolean checkGameEnd() {
+        // 2 cases
+        // 1: Game board is filled
+        int empty_slots = 0;
+        for (int i = 0; i <dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (state[i][j] == 0) {
+                    empty_slots++;
+                }
+            }
+        }
+        if (empty_slots == 0) {
+            return true;
+        }
+
+        // 2: No more moves
+        if (noMoreMoves(turn) && noMoreMoves(turn * -1)) {
+            return true;
+        }
+
+        // game is still on
+        return false;
+    }
+
+    private Boolean noMoreMoves(int curr_turn) {
+        return false;
     }
 }
