@@ -3,6 +3,7 @@ package com.mega.games.gamestartingkit.core.gameObjects.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
+import com.mega.games.gamestartingkit.core.dataLoaders.PlayerType;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Box;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Slot;
 
@@ -16,9 +17,6 @@ public class Board extends Box {
     private int[][] state;
     private int turn;
     private ArrayList<Coin> coins;
-
-    private float hint_radius = 5f;
-    private Color hint_color = Color.SKY;
     private ArrayList<Integer[]> hints;
 
     public Board(int dimension, float size, Color color) {
@@ -110,7 +108,7 @@ public class Board extends Box {
         }
 
         for (Integer[] hint:hints) {
-            Coin hint_coin =  new Coin(hint_radius, hint_color);
+            Coin hint_coin =  new Coin(GameData.getInstance().hintRadius, GameData.getInstance().hintColor);
             hint_coin.setPos(this.getPos().x + hint[0] * this.slot_size + this.slot_size/2f,
                     this.getPos().y + hint[1] * this.slot_size + this.slot_size/2f);
             hint_coin.draw(batch);
@@ -124,9 +122,9 @@ public class Board extends Box {
                 if (state[i][j] == 0) {
                     continue;
                 }
-                Coin new_coin =  new Coin((this.slot_size - 0.2f) / 2f, Color.BLACK);
+                Coin new_coin =  new Coin((this.slot_size / 2f) - GameData.getInstance().slotMargin, GameData.getInstance().P1_color);
                 if (state[i][j] == 1) {
-                    new_coin.setColor(Color.WHITE);
+                    new_coin.setColor(GameData.getInstance().P2_color);
                 } // else let it remain black
 
                 new_coin.setPos(this.getPos().x + i * this.slot_size + this.slot_size/2f,
@@ -191,6 +189,15 @@ public class Board extends Box {
         else {
             if (hints.isEmpty()) {
                 updateTurn();
+            } else {
+                if ( (turn == -1 && GameData.getInstance().Player1 == PlayerType.HUMAN) ||
+                        (turn == 1 && GameData.getInstance().Player2 == PlayerType.HUMAN) ){
+                    // TODO: prompt current player to play
+                    System.out.println("YOUR TURN!");
+                }
+                else {
+                    // ask AI to respond
+                }
             }
         }
     }
@@ -199,7 +206,7 @@ public class Board extends Box {
         // 2 cases
         // 1: Game board is filled
         int empty_slots = 0;
-        for (int i = 0; i <dimension; i++) {
+        for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 if (state[i][j] == 0) {
                     empty_slots++;

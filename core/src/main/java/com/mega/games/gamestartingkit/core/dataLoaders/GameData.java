@@ -1,5 +1,6 @@
 package com.mega.games.gamestartingkit.core.dataLoaders;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameData {
@@ -19,15 +20,17 @@ public class GameData {
 
     //Game Specific Data (Mostly Config Driven)
     //Todo: Define Game Specific Data
+    public int Dimension;
+    public float slotMargin;
+    public float hintRadius;
+    public Color hintColor;
 
-    //Example 1: Bounded var increasing with time
-    public Vector2 zombieSpeedBounds;
-    public float zombieSpeed;
+    public PlayerType Player1;
+    public PlayerType Player2;
+    public Color P1_color;
+    public Color P2_color;
 
     public Vector2 screenCenter = new Vector2(_virtualWidth/2f, _virtualHeight/2f);
-
-    //Example 2: Random var within some range
-    public Vector2 zombieScaleBounds;
 
     //set singleton
     private static final GameData _myInstance = new GameData();
@@ -36,3 +39,4 @@ public class GameData {
     }
     private GameData(){}
 }
+

@@ -1,7 +1,7 @@
 package com.mega.games.gamestartingkit.core.dataLoaders;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.Color;
 import com.mega.games.support.MegaServices;
 
 import java.util.HashMap;
@@ -64,16 +64,16 @@ public class GameDataController{
 
         //Get Data From Config
         //Todo: setDefault config data etc
-        //Example 1: Bounded var increasing with time
-        float minZombieSpeed = Float.parseFloat(extractValFromConfig("minZombieSpeed", "1"));
-        float maxZombieSpeed = Float.parseFloat(extractValFromConfig("maxZombieSpeed", "2.5"));
-        data.zombieSpeedBounds = new Vector2(minZombieSpeed,maxZombieSpeed);
-        data.zombieSpeed = minZombieSpeed;
+        data.Dimension = 8;
+        data.slotMargin = 1f;
+        data.hintRadius = 5f;
+        data.hintColor = Color.SKY;
 
-        //Example 2: Random var within some range
-        float minZombieScale = Float.parseFloat(extractValFromConfig("minZombieScale", "1"));
-        float maxZombieScale = Float.parseFloat(extractValFromConfig("maxZombieScale", "2"));
-        data.zombieScaleBounds = new Vector2(minZombieScale,maxZombieScale);
+        data.Player1 = PlayerType.HUMAN;
+        data.Player2 = PlayerType.AI;
+
+        data.P1_color = Color.BLUE;
+        data.P2_color = Color.YELLOW;
     }
 
     public void setGameEnded(){
@@ -111,11 +111,6 @@ public class GameDataController{
 
     public void update(float dt){
         data.elapsed += dt;
-        float factor = (float)Math.pow(0.997, data.elapsed);
-
-        //update game vars with time
-        //Example 1: Bounded var increasing with time
-        data.zombieSpeed = factor*data.zombieSpeedBounds.x + (1-factor)*data.zombieSpeedBounds.y;
     }
 
     //set singleton

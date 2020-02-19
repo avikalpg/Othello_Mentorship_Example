@@ -10,7 +10,6 @@ import com.mega.games.gamestartingkit.core.gameObjects.entities.Coin;
 import java.util.ArrayList;
 
 public class GameObjectManager {
-    private int dimension = 8;
     private Board board;
     private Coin turn_coin;
     private ArrayList<GameObject> objs;
@@ -21,12 +20,12 @@ public class GameObjectManager {
 
         float margin = 10f;
         float board_size = Math.min(GameData._virtualHeight, GameData._virtualWidth) - (2 * margin);
-        board = new Board(dimension, board_size, Color.CORAL);
+        board = new Board(GameData.getInstance().Dimension, board_size, Color.CORAL);
         board.setPos(GameData._virtualWidth/2f - board_size/2f, GameData._virtualHeight/2f - board_size/2f);
 
         objs.add(board);
 
-        turn_coin = new Coin(board_size/(2*dimension), Color.BLACK);
+        turn_coin = new Coin(board_size/( 2 * GameData.getInstance().Dimension ), GameData.getInstance().P1_color);
         turn_coin.setPos(GameData._virtualWidth/2f + turn_coin.getRadius() * 4, turn_coin.getRadius() * 2);
         objs.add(turn_coin);
     }
@@ -42,7 +41,7 @@ public class GameObjectManager {
             obj.update(dt);
         }
 
-        turn_coin.setColor((board.getTurn() == 1)? Color.WHITE : Color.BLACK);
+        turn_coin.setColor((board.getTurn() == 1)? GameData.getInstance().P2_color : GameData.getInstance().P1_color);
     }
 
     public void draw(Batch batch){
