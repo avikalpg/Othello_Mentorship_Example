@@ -26,7 +26,8 @@ public class GameObjectManager {
 
         objs.add(board);
 
-        turn_coin = new Coin(board_size/dimension, Color.BLACK);
+        turn_coin = new Coin(board_size/(2*dimension), Color.BLACK);
+        turn_coin.setPos(GameData._virtualWidth/2f + turn_coin.getRadius() * 4, turn_coin.getRadius() * 2);
         objs.add(turn_coin);
     }
 
