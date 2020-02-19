@@ -24,6 +24,7 @@ public class GameData {
     public float slotMargin;
     public float hintRadius;
     public Color hintColor;
+    public Color backgroundColor;
 
     public PlayerType Player1;
     public PlayerType Player2;

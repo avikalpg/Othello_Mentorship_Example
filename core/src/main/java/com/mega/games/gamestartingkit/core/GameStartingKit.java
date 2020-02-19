@@ -1,11 +1,11 @@
 package com.mega.games.gamestartingkit.core;
 
-import com.mega.games.gamestartingkit.core.dataLoaders.GameDataController;
 import com.mega.games.gamestartingkit.core.dataLoaders.GameInfra;
-//import com.mega.games.gamestartingkit.core.examples.shaders.ShaderExampleScreen1;
 import com.mega.games.gamestartingkit.core.screens.PlayScreen;
 import com.mega.games.support.MegaGame;
 import com.mega.games.support.MegaServices;
+
+//import com.mega.games.gamestartingkit.core.examples.shaders.ShaderExampleScreen1;
 
 public class GameStartingKit extends MegaGame {
 

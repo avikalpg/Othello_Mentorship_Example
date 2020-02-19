@@ -68,12 +68,13 @@ public class GameDataController{
         data.slotMargin = 1f;
         data.hintRadius = 5f;
         data.hintColor = Color.SKY;
+        data.backgroundColor = Color.FIREBRICK;
 
         data.Player1 = PlayerType.HUMAN;
         data.Player2 = PlayerType.AI;
 
-        data.P1_color = Color.BLUE;
-        data.P2_color = Color.YELLOW;
+        data.P1_color = Color.BLACK;
+        data.P2_color = Color.WHITE;
     }
 
     public void setGameEnded(){
