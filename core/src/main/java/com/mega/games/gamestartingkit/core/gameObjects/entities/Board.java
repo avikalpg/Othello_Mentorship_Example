@@ -17,6 +17,10 @@ public class Board extends Box {
     private int turn;
     private ArrayList<Coin> coins;
 
+    private float hint_radius = 5f;
+    private Color hint_color = Color.SKY;
+    private ArrayList<Integer[]> hints;
+
     public Board(int dimension, float size, Color color) {
         super(size, size, color);
 
@@ -33,7 +37,8 @@ public class Board extends Box {
         state[dimension/2][dimension/2 - 1] = 1;
         state[dimension/2][dimension/2] = -1;
 
-        turn = -1;
+        turn = 1;
+        updateTurn();
     }
 
     public int getTurn() {
@@ -57,7 +62,7 @@ public class Board extends Box {
         j = (int) (y / this.slot_size);
         System.out.println(i + " " + j);
 
-        int score_inc = move(turn, i, j);
+        int score_inc = move(turn, i, j, false);
 
         if (score_inc > 0) {
             if (turn == 1) {
@@ -103,6 +108,13 @@ public class Board extends Box {
         for (Coin coin:coins){
             coin.draw(batch);
         }
+
+        for (Integer[] hint:hints) {
+            Coin hint_coin =  new Coin(hint_radius, hint_color);
+            hint_coin.setPos(this.getPos().x + hint[0] * this.slot_size + this.slot_size/2f,
+                    this.getPos().y + hint[1] * this.slot_size + this.slot_size/2f);
+            hint_coin.draw(batch);
+        }
     }
 
     private ArrayList<Coin> getCoins() {
@@ -126,12 +138,13 @@ public class Board extends Box {
         return coins;
     }
 
-    private int move(int turn, int i, int j) {
+    private int move(int turn, int i, int j, boolean isEnquiry) {
         if (turn != 1 && turn != -1) {
             throw new InvalidParameterException("turn should only be -1 (Black) or 1 (White)");
         }
         else if (state[i][j] != 0) {
-            System.out.println("You can only place coins on empty spots");
+            if (!isEnquiry)
+                System.out.println("You can only place coins on empty spots");
             return 0;
         }
 
@@ -152,7 +165,8 @@ public class Board extends Box {
                         while (x != i || y != j) {
                             x -= direction[0];
                             y -= direction[1];
-                            state[x][y] = turn;
+                            if (!isEnquiry)
+                                state[x][y] = turn;
                         }
                         score += score_inc;
                     }
@@ -169,13 +183,14 @@ public class Board extends Box {
     }
 
     private void updateTurn() {
+        turn *= -1;
+        hints = getPossibleMoves(turn);
         if (checkGameEnd()) {
             GameData.getInstance().isGameEnded = true;
         }
         else {
-            turn *= -1;
-            if (noMoreMoves(turn)) {
-                turn *= -1;
+            if (hints.isEmpty()) {
+                updateTurn();
             }
         }
     }
@@ -196,15 +211,24 @@ public class Board extends Box {
         }
 
         // 2: No more moves
-        if (noMoreMoves(turn) && noMoreMoves(turn * -1)) {
-            return true;
+        if (hints.isEmpty()) {
+            return getPossibleMoves(turn * -1).isEmpty();
         }
 
-        // game is still on
+        // otherwise, game is still on
         return false;
     }
 
-    private Boolean noMoreMoves(int curr_turn) {
-        return false;
+    private ArrayList<Integer[]> getPossibleMoves(int curr_turn) {
+        ArrayList<Integer[]> possibleMoves = new ArrayList<>();
+        for (int i = 0; i < dimension; i++ ){
+            for (int j = 0; j < dimension; j++) {
+                if (move(curr_turn, i, j, true) > 0) {
+                    possibleMoves.add(new Integer[]{i, j});
+                }
+            }
+        }
+        return possibleMoves;
     }
+
 }

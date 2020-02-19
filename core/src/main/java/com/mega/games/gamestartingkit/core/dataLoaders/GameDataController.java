@@ -60,7 +60,7 @@ public class GameDataController{
         data.black_score = 2;
         data.white_score = 2;
 
-        data.gameEndLag = 5;
+        data.gameEndLag = 1;
 
         //Get Data From Config
         //Todo: setDefault config data etc
