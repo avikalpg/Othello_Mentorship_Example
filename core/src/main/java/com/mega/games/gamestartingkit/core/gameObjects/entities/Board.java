@@ -9,6 +9,7 @@ import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Slot;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Board extends Box {
 
@@ -18,6 +19,8 @@ public class Board extends Box {
     private int turn;
     private ArrayList<Coin> coins;
     private ArrayList<Integer[]> hints;
+
+    private HashMap<Integer, PlayerType> playerMap;
 
     public Board(int dimension, float size, Color color) {
         super(size, size, color);
@@ -35,6 +38,9 @@ public class Board extends Box {
         state[dimension/2][dimension/2 - 1] = 1;
         state[dimension/2][dimension/2] = -1;
 
+        playerMap = new HashMap<>();
+        playerMap.put(-1, GameData.getInstance().Player1);
+        playerMap.put(1, GameData.getInstance().Player2);
         turn = 1;
         updateTurn();
     }
@@ -190,8 +196,7 @@ public class Board extends Box {
             if (hints.isEmpty()) {
                 updateTurn();
             } else {
-                if ( (turn == -1 && GameData.getInstance().Player1 == PlayerType.HUMAN) ||
-                        (turn == 1 && GameData.getInstance().Player2 == PlayerType.HUMAN) ){
+                if (playerMap.get(turn) == PlayerType.HUMAN){
                     // TODO: prompt current player to play
                     System.out.println("YOUR TURN!");
                 }
