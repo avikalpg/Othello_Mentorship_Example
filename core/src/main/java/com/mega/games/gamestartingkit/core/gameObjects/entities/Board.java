@@ -2,6 +2,7 @@ package com.mega.games.gamestartingkit.core.gameObjects.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.mega.games.gamestartingkit.core.AgentManager;
 import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
 import com.mega.games.gamestartingkit.core.dataLoaders.PlayerType;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Box;
@@ -20,7 +21,8 @@ public class Board extends Box {
     private ArrayList<Coin> coins;
     private ArrayList<Integer[]> hints;
 
-    private HashMap<Integer, PlayerType> playerMap;
+    private HashMap<Integer, PlayerType> playerTypeMap;
+    private AgentManager agentManager;
 
     public Board(int dimension, float size, Color color) {
         super(size, size, color);
@@ -38,11 +40,13 @@ public class Board extends Box {
         state[dimension/2][dimension/2 - 1] = 1;
         state[dimension/2][dimension/2] = -1;
 
-        playerMap = new HashMap<>();
-        playerMap.put(-1, GameData.getInstance().Player1);
-        playerMap.put(1, GameData.getInstance().Player2);
+        playerTypeMap = new HashMap<>();
+        playerTypeMap.put(-1, GameData.getInstance().Player1);
+        playerTypeMap.put(1, GameData.getInstance().Player2);
         turn = 1;
         updateTurn();
+
+        agentManager = new AgentManager(state);
     }
 
     public int getTurn() {
@@ -52,6 +56,10 @@ public class Board extends Box {
     @Override
     public void onTouchDown(float x, float y) {
         super.onTouchDown(x, y);
+
+        if (playerTypeMap.get(turn) != PlayerType.HUMAN) {
+            return;
+        }
 
         int i, j;
 
@@ -67,18 +75,7 @@ public class Board extends Box {
         System.out.println(i + " " + j);
 
         int score_inc = move(turn, i, j, false);
-
-        if (score_inc > 0) {
-            if (turn == 1) {
-                GameData.getInstance().white_score += score_inc + 1;
-                GameData.getInstance().black_score -= score_inc;
-            }
-            else if (turn == -1) {
-                GameData.getInstance().black_score += score_inc + 1;
-                GameData.getInstance().white_score -= score_inc;
-            }
-            updateTurn();
-        }
+        updateScore(score_inc);
     }
 
     @Override
@@ -186,6 +183,20 @@ public class Board extends Box {
         return score;
     }
 
+    private void updateScore(int score_inc) {
+        if (score_inc > 0) {
+            if (turn == 1) {
+                GameData.getInstance().white_score += score_inc + 1;
+                GameData.getInstance().black_score -= score_inc;
+            }
+            else if (turn == -1) {
+                GameData.getInstance().black_score += score_inc + 1;
+                GameData.getInstance().white_score -= score_inc;
+            }
+            updateTurn();
+        }
+    }
+
     private void updateTurn() {
         turn *= -1;
         hints = getPossibleMoves(turn);
@@ -196,12 +207,15 @@ public class Board extends Box {
             if (hints.isEmpty()) {
                 updateTurn();
             } else {
-                if (playerMap.get(turn) == PlayerType.HUMAN){
+                if (playerTypeMap.get(turn) == PlayerType.HUMAN){
                     // TODO: prompt current player to play
                     System.out.println("YOUR TURN!");
                 }
                 else {
                     // ask AI to respond
+                    Integer[] nextMove = agentManager.play(this.state, hints);
+                    int score_inc = move(turn, nextMove[0], nextMove[1], false);
+                    updateScore(score_inc);
                 }
             }
         }
