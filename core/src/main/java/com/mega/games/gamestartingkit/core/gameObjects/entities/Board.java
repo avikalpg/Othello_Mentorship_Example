@@ -46,7 +46,23 @@ public class Board extends Box {
         turn = 1;
         updateTurn();
 
-        agentManager = new AgentManager(state);
+        agentManager = new AgentManager(state, "Dummy", new AgentManager.Callbacks() {
+            @Override
+            public <T> int executeMoveGetReward(T next_move) {
+                int reward = 0;
+                if(next_move instanceof Integer[]) {
+                     reward = execute((Integer[])next_move);
+                }
+                return reward;
+            }
+        });
+
+    }
+
+    public int execute(Integer[] next_move) {
+        int score_inc = move(turn, next_move[0], next_move[1], false);
+        updateScore(score_inc);
+        return score_inc;
     }
 
     public int getTurn() {
@@ -213,9 +229,7 @@ public class Board extends Box {
                 }
                 else {
                     // ask AI to respond
-                    Integer[] nextMove = agentManager.play(this.state, hints);
-                    int score_inc = move(turn, nextMove[0], nextMove[1], false);
-                    updateScore(score_inc);
+                    agentManager.play(this.state, hints);
                 }
             }
         }
